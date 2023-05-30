@@ -4,8 +4,8 @@
 import zeromq from "zeromq";
 import { config } from "./config";
 
-const socket = zeromq.socket("push");
-socket.bindSync(config.CLOUD_TCP_SOCKET);
+const socket = zeromq.socket("pull");
+socket.connect(config.CLOUD_TCP_SOCKET);
 console.log("Cloud worker bound to", config.CLOUD_TCP_SOCKET);
 
 const index = () => {
