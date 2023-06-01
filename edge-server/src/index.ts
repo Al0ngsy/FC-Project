@@ -2,6 +2,7 @@
 // Edge server is producing data and send them to cloud server
 import zeromq from "zeromq";
 import { config } from "./config";
+import { randomInt } from "crypto";
 
 const socket = zeromq.socket("push");
 socket.bindSync(config.CLOUD_TCP_SOCKET);
@@ -11,11 +12,12 @@ const index = () => {
 	let i = 0;
 	setInterval(
 		function () {
-			console.log("sending work", i);
+			const info = randomInt(100)
+			console.log(`sending work ${i}`, info);
+			socket.send(`some work ${i}`, info);
 			i++;
-			socket.send("some work");
 		},
-		2000 // every 2000 ms
+		5000 // every 5000 ms
 	);
 };
 
