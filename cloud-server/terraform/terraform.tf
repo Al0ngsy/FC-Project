@@ -1,7 +1,7 @@
 // Google Cloud Provider Konfiguration
 provider "google" {
   // Pfad zur JSON-Schlüsseldatei des Service-Accounts
-  credentials = file("<PFAD_ZUR_GCP_SERVICE_ACCOUNT_KEY_JSON_DATEI>")
+  credentials = file("cloud-server\terraform\terraform.tf")
   // Die Projekt-ID, unter der die Ressourcen erstellt werden
   project     = "fc-projekt"
   // Die Region, in der die Ressourcen erstellt werden
@@ -21,7 +21,7 @@ resource "google_compute_instance" "default" {
   boot_disk {
     initialize_params {
       // Image, das für die Boot-Disk verwendet wird
-      image = "debian-cloud/debian-9"
+      image = "ubuntu-os-cloud/ubuntu-2204-lts"
     }
   }
 
