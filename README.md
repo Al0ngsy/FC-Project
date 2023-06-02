@@ -12,6 +12,7 @@ On 3 separate terminal:
 
 ```
 cd cloud-server
+yarn -- first time only
 yarn start
 or 
 yarn dev 
@@ -19,6 +20,7 @@ yarn dev
 
 ```
 cd edge-server
+yarn -- first time only
 yarn start
 or 
 yarn dev 
@@ -26,6 +28,7 @@ yarn dev
 
 ```
 cd load-balancer
+yarn -- first time only
 yarn start
 or 
 yarn dev 
