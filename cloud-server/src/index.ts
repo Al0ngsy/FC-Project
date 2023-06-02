@@ -1,17 +1,18 @@
-// Implementation of Push/Pull for SensorData
-// Cloud server listen to pushes from edge server
+// Cloud server listen to REQ from edge server
 
-import zeromq from "zeromq";
+import zmq from "zeromq";
 import { config } from "./config";
+import { randomInt } from "crypto";
 
-const socket = zeromq.socket("pull");
-socket.connect(config.CLOUD_TCP_SOCKET);
-console.log("Cloud worker bound to", config.CLOUD_TCP_SOCKET);
+const responder = zmq.socket('rep');
 
-const index = () => {
-	socket.on("message", function (msg) {
-		console.log("work: %s", msg.toString());
-	});
-};
+const tcpAdr = `tcp://${config.LB_IP}:${config.LB_PORT}`
+console.log('connect to', tcpAdr)
+responder.connect(tcpAdr);
 
-index();
+responder.on('message', function(msg) {
+  console.log('cloud received request:', msg.toString());
+  setTimeout(function() {
+    responder.send(msg.toString() + " World");
+  }, 1000);
+});

@@ -1,24 +1,28 @@
-// Implementation of Push/Pull for SensorData
-// Edge server is producing data and send them to cloud server
-import zeromq from "zeromq";
+// Edge server is producing data and send them to cloud server (REP)
+
+import zmq from "zeromq";
 import { config } from "./config";
 import { randomInt } from "crypto";
 
-const socket = zeromq.socket("push");
-socket.bindSync(config.CLOUD_TCP_SOCKET);
-console.log("Producer bound to", config.CLOUD_TCP_SOCKET);
+const requester = zmq.socket('req');
 
-const index = () => {
-	let i = 0;
-	setInterval(
-		function () {
-			const info = randomInt(100)
-			console.log(`sending work ${i}`, info);
-			socket.send(`some work ${i}`, info);
-			i++;
-		},
-		5000 // every 5000 ms
-	);
-};
+const tcpAdr = `tcp://${config.LB_IP}:${config.LB_PORT}`
+console.log('connect to', tcpAdr)
+requester.connect(tcpAdr);
 
-index();
+var replyNbr = 0;
+requester.on('message', function(msg) {
+  console.log('got reply', replyNbr, msg.toString());
+  replyNbr += 1;
+});
+
+let i = 0;
+setInterval(
+	function () {
+		const msg = `Hello ${i}`
+		console.log(`sending:`, msg);
+		requester.send(msg);
+		i++;
+	},
+	3000 // every 3000 ms
+);

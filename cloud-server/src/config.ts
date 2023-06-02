@@ -1,3 +1,4 @@
 export const config = {
-	CLOUD_TCP_SOCKET: "tcp://127.0.0.1:3000",
+	LB_PORT: process.env.PORT || 5560,
+	LB_IP: process.env.LB_IP || "localhost",
 };
