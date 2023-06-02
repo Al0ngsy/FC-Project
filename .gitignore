@@ -127,3 +127,4 @@ dist
 .pnp.*
 
 build/
+cloud-server/terraform/gcp_service_account.json

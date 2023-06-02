@@ -3,19 +3,19 @@ provider "google" {
   // Pfad zur JSON-Schlüsseldatei des Service-Accounts
   credentials = file("<PFAD_ZUR_GCP_SERVICE_ACCOUNT_KEY_JSON_DATEI>")
   // Die Projekt-ID, unter der die Ressourcen erstellt werden
-  project     = "<IHRE_GCP_PROJEKT_ID>"
+  project     = "fc-projekt"
   // Die Region, in der die Ressourcen erstellt werden
-  region      = "us-central1"
+  region      = "europe-north1"
 }
 
 // Ressource für die VM-Instanz
 resource "google_compute_instance" "default" {
   // Name der VM-Instanz
-  name         = "terraform-instance"
+  name         = "cloud-endpoint"
   // Maschinentyp der VM-Instanz
   machine_type = "f1-micro"
   // Zone, in der die VM-Instanz erstellt wird
-  zone         = "<IHRE_GCP_ZONE>"
+  zone         = "europe-north1-c"
 
   // Konfiguration der Boot-Disk
   boot_disk {
