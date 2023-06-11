@@ -5,7 +5,7 @@
 	"license": "MIT",
 	"scripts": {
 		"compile": "npx tsc",
-		"start": "nodemon",
+		"start": "nodemon --inspect --require ts-node/register src/index.ts",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [],
@@ -13,6 +13,7 @@
 	"description": "",
 	"devDependencies": {
 		"@types/node": "^20.2.5",
+		"@types/node-fetch": "^2.6.4",
 		"@types/zeromq": "^5.2.2",
 		"nodemon": "^2.0.22",
 		"prettier": "^2.8.8",
@@ -21,7 +22,7 @@
 	},
 	"dependencies": {
 		"date-fns": "^2.30.0",
-		"nanoid": "^4.0.2",
+		"nanoid": "3.3.5",
 		"node-fetch": "2",
 		"zeromq": "5"
 	}

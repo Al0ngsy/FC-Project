@@ -1,27 +1,13 @@
 import { nanoid } from "nanoid";
+import {
+	DataDefaultValues,
+	DataInfo,
+	DataMetaInfo,
+	LocalStorage,
+	StoredData,
+} from "../@types/data";
 import { config } from "../config";
-import { parseToNumber } from "../utils";
-
-export type DataInfo = {
-	dataContentType: string; // See https://www.geeksforgeeks.org/http-headers-content-type/
-	data: any; // The data, type of depend on dataContentType
-};
-
-type DataDefaultValues = {
-	dataTime: number; // When data was generated, in unix timestamp
-	dataUniqueId: string; // Self-explaining
-	dataCounter: number;
-};
-
-type DataMetaInfo = {
-	retriesAmount: number; // Indicates the number of times this data has been unsuccessfully sent to the server. Used for exponential retries.
-	lastSendTime: number | null; // Self-explaining
-	nextSendTime: number; // Self-explaining. Used for exponential retries.
-};
-
-export type StoredData = DataInfo & DataDefaultValues & DataMetaInfo;
-
-export type LocalStorage = StoredData[];
+import { formatDataForPrint, log, parseToNumber } from "../utils";
 
 const LOCAL_STORAGE: LocalStorage = [];
 let dataCounter = 0;
@@ -31,15 +17,17 @@ let dataCounter = 0;
  * @param props
  */
 export const appendDataToStorage = (props: DataInfo) => {
+	const uid = nanoid();
 	const defaultValues = {
 		dataTime: new Date().getTime(),
-		dataUniqueId: nanoid(),
+		dataUniqueId: uid,
 		dataCounter: dataCounter,
 	} as DataDefaultValues;
 
 	const defaultMetadata = {
 		retriesAmount: 0,
 		lastSendTime: null,
+		nextSendTime: new Date().getTime(),
 	} as DataMetaInfo;
 
 	LOCAL_STORAGE.push({
@@ -56,6 +44,10 @@ export const appendDataToStorage = (props: DataInfo) => {
  * @param dataUniqueId
  */
 export const removeDataFromStorageById = (dataUniqueIds: string[]) => {
+	if (dataUniqueIds.length === 0) {
+		return;
+	}
+
 	const dataToBeRemoved = LOCAL_STORAGE.find((d) =>
 		dataUniqueIds.includes(d.dataUniqueId)
 	);
@@ -74,28 +66,42 @@ export const removeDataFromStorageById = (dataUniqueIds: string[]) => {
 	);
 
 	// Update the reference of LOCAL_STORAGE with the updated array
-	console.log("Remove data with id", dataUniqueIds, "from storage.");
+	log(`Remove data with id ${dataUniqueIds} from storage.`);
 	Object.assign(LOCAL_STORAGE, updatedLocalStorage);
 };
 
 export const updateDataOnStorageById = (dataUniqueIds: string[]) => {
+	if (dataUniqueIds.length === 0) {
+		return;
+	}
+
 	const updatedLocalStorage = LOCAL_STORAGE.map((d) => {
 		if (dataUniqueIds.includes(d.dataUniqueId)) {
+			const lastSendTime = new Date().getTime(); // now
+			const nextSendTime =
+				Math.pow(2, d.retriesAmount) *
+					parseToNumber(config.BACKOFF_TIME_MS) +
+				lastSendTime;
+
+			const retriesAmount = d.retriesAmount + 1;
+			log(
+				`Update data ${formatDataForPrint(
+					d
+				)} SET retriesAmount: ${retriesAmount}, nextSendTime: ${new Date(
+					nextSendTime
+				).toLocaleTimeString()}`
+			);
 			return {
 				...d,
-				retriesAmount: d.retriesAmount + 1,
-				lastSendTime: new Date().getTime(),
-				nextSendTime:
-					Math.pow(2, d.retriesAmount) *
-						parseToNumber(config.BACKOFF_TIME_MS) +
-					new Date().getTime(),
+				retriesAmount: retriesAmount,
+				lastSendTime: lastSendTime,
+				nextSendTime: nextSendTime,
 			} as StoredData;
 		}
 		return d;
 	});
 
 	// Update the reference of LOCAL_STORAGE with the updated array
-	console.log("Update data with id", dataUniqueIds, "on storage.");
 	Object.assign(LOCAL_STORAGE, updatedLocalStorage);
 };
 
