@@ -1,18 +1,26 @@
 // Cloud server listen to REQ from edge server
 
-import zmq from "zeromq";
+import Koa from "koa";
+import { koaBody } from "koa-body";
+import KoaRouter from "koa-router";
+import { StoredData } from "./@types/data";
+import { chaosMonkey } from "./chaosMonkey";
 import { config } from "./config";
-import { randomInt } from "crypto";
+import { formatDataForPrint, log } from "./utils";
 
-const responder = zmq.socket('rep');
+const app = new Koa();
+const router = new KoaRouter();
 
-const tcpAdr = `tcp://${config.LB_IP}:${config.LB_PORT}`
-console.log('connect to', tcpAdr)
-responder.connect(tcpAdr);
+router.post("/save/data", chaosMonkey, koaBody(), (ctx) => {
+	const data = ctx.request.body as StoredData;
+	log(formatDataForPrint(data));
 
-responder.on('message', function(msg) {
-  console.log('cloud received request:', msg.toString());
-  setTimeout(function() {
-    responder.send(msg.toString() + " World");
-  }, 1000);
+	// TODO: saving data?
+
+	ctx.status = 200;
+	ctx.body = "ok";
 });
+
+app.use(router.routes());
+app.listen(config.SERVER_PORT);
+console.log(`app listen on port ${config.SERVER_PORT}`);

@@ -9,7 +9,7 @@ import {
 import { config } from "../config";
 import { formatDataForPrint, log, parseToNumber } from "../utils";
 
-const LOCAL_STORAGE: LocalStorage = [];
+let LOCAL_STORAGE: LocalStorage = [];
 let dataCounter = 0;
 
 /**
@@ -65,9 +65,11 @@ export const removeDataFromStorageById = (dataUniqueIds: string[]) => {
 		(d) => !dataUniqueIds.includes(d.dataUniqueId)
 	);
 
+	debugger;
+
 	// Update the reference of LOCAL_STORAGE with the updated array
 	log(`Remove data with id ${dataUniqueIds} from storage.`);
-	Object.assign(LOCAL_STORAGE, updatedLocalStorage);
+	LOCAL_STORAGE = updatedLocalStorage;
 };
 
 export const updateDataOnStorageById = (dataUniqueIds: string[]) => {

@@ -33,10 +33,10 @@ export const sendDataToServer = async () => {
 		try {
 			const res = await fetch(serverUrl, {
 				method: "post",
-				// headers: {
-				// 	"Content-Type": data.dataContentType,
-				// },
-				body: data.data,
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(data),
 			});
 
 			if (res.ok) {
