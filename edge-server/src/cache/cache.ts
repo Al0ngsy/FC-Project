@@ -65,8 +65,6 @@ export const removeDataFromStorageById = (dataUniqueIds: string[]) => {
 		(d) => !dataUniqueIds.includes(d.dataUniqueId)
 	);
 
-	debugger;
-
 	// Update the reference of LOCAL_STORAGE with the updated array
 	log(`Remove data with id ${dataUniqueIds} from storage.`);
 	LOCAL_STORAGE = updatedLocalStorage;
@@ -104,7 +102,7 @@ export const updateDataOnStorageById = (dataUniqueIds: string[]) => {
 	});
 
 	// Update the reference of LOCAL_STORAGE with the updated array
-	Object.assign(LOCAL_STORAGE, updatedLocalStorage);
+	LOCAL_STORAGE = updatedLocalStorage;
 };
 
 /**
