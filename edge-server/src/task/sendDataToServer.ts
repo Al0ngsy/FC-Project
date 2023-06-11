@@ -13,7 +13,9 @@ export const sendDataToServer = async () => {
 	const dataToBeSent = retrieveDataFromStorage();
 	log(
 		`Sending data: ${JSON.stringify(
-			dataToBeSent.map((d) => formatDataForPrint(d))
+			dataToBeSent.map((d) => formatDataForPrint(d)),
+			null,
+			2
 		)}`
 	);
 
