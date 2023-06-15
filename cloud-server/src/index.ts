@@ -4,22 +4,26 @@ import Koa from "koa";
 import { koaBody } from "koa-body";
 import KoaRouter from "koa-router";
 import { StoredData } from "./@types/data";
-import { chaosMonkey } from "./chaosMonkey";
+import { chaosAfterMonkey, chaosMonkey } from "./chaosMonkey";
 import { config } from "./config";
-import { formatDataForPrint, log } from "./utils";
+import { dbAdd } from "./db/database";
 
 const app = new Koa();
 const router = new KoaRouter();
 
-router.post("/save/data", chaosMonkey, koaBody(), (ctx) => {
-	const data = ctx.request.body as StoredData;
-	log(formatDataForPrint(data));
-
-	// TODO: saving data?
-
-	ctx.status = 200;
-	ctx.body = "ok";
-});
+router.post(
+	"/save/data",
+	chaosMonkey,
+	koaBody(),
+	async (ctx, next) => {
+		const data = ctx.request.body as StoredData;
+		dbAdd(data);
+		ctx.status = 200;
+		ctx.body = "ok";
+		await next();
+	},
+	chaosAfterMonkey
+);
 
 app.use(router.routes());
 app.listen(config.SERVER_PORT);
