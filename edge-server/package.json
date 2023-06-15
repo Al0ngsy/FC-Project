@@ -5,7 +5,9 @@
 	"license": "MIT",
 	"scripts": {
 		"compile": "npx tsc",
+		"docker": "docker build -t eserver .",
 		"start": "nodemon --inspect --require ts-node/register src/index.ts",
+		"start-container": "node dist/src/index.js",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [],
@@ -23,7 +25,6 @@
 	"dependencies": {
 		"date-fns": "^2.30.0",
 		"nanoid": "3.3.5",
-		"node-fetch": "2",
-		"zeromq": "5"
+		"node-fetch": "2"
 	}
 }
