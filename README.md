@@ -8,9 +8,9 @@ Require node (https://nodejs.org/en) >= 14.17
 
 - Tested on node 18.16.0
 
-For local testing:
+## For local testing:
 
-On 3 separate terminal:
+On 2 separate terminal:
 
 ```
 cd cloud-server
@@ -22,14 +22,6 @@ yarn dev
 
 ```
 cd edge-server
-yarn -- first time only
-yarn start
-or
-yarn dev
-```
-
-```
-cd load-balancer
 yarn -- first time only
 yarn start
 or
