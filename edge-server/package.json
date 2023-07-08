@@ -5,7 +5,7 @@
 	"license": "MIT",
 	"scripts": {
 		"compile": "npx tsc",
-		"docker": "docker build -t eserver .",
+		"docker": "docker build -t zero85/fog_project:edge .",
 		"start-container": "node dist/src/index.js",
 		"start": "nodemon --inspect --require ts-node/register src/index.ts",
 		"test": "echo \"Error: no test specified\" && exit 1"
