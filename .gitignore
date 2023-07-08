@@ -131,3 +131,5 @@ cloud-server/terraform/.terraform.lock.hcl
 cloud-server/terraform/gcp_service_account.json
 cloud-server/terraform/.terraform/providers/registry.terraform.io/hashicorp/google/4.67.0/windows_amd64/terraform-provider-google_v4.67.0_x5.exe
 cloud_setup/gcp_account.json
+cloud_setup/.terraform.lock.hcl
+cloud_setup/.terraform/providers/registry.terraform.io/hashicorp/google/4.72.1/windows_amd64/terraform-provider-google_v4.72.1_x5.exe
