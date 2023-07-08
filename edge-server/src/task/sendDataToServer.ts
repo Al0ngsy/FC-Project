@@ -42,7 +42,7 @@ export const sendDataToServer = async () => {
 			if (res.ok) {
 				// equal to 200 <= res.status && res. status < 300
 				// https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#successful_responses
-				return { status: "fulfilled", data };
+				return { status: "fulfilled", data, res };
 			} else {
 				console.error(
 					`Received non 2xx response code from server ${res.status} ${res.statusText}`,
@@ -62,12 +62,22 @@ export const sendDataToServer = async () => {
 
 	const results = await Promise.allSettled(promises);
 
-	results.forEach((result) => {
+	results.forEach(async (result) => {
 		if (
 			result.status === "fulfilled" &&
 			result.value.status === "fulfilled"
 		) {
 			dataToBeRemovedFromStorage.push(result.value.data);
+			if (result.value.res) {
+				const { result: resResult } = await result.value.res.json();
+				log(
+					`Result received from cloud server for ${
+						result.value.data.dataUniqueId
+					} is ${resResult} -> ${
+						resResult % 2 === 0 ? "even" : "uneven"
+					}`
+				);
+			}
 		} else {
 			// @ts-ignore - stupid ts think this is an error
 			dataToBeUpdatedInStorage.push(result.value.data);

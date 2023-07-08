@@ -7,6 +7,7 @@ import { StoredData } from "./@types/data";
 import { chaosAfterMonkey, chaosMonkey } from "./chaosMonkey";
 import { config } from "./config";
 import { dbAdd } from "./db/database";
+import { processSensorData } from "./task/processSensorData";
 
 const app = new Koa();
 const router = new KoaRouter();
@@ -18,8 +19,11 @@ router.post(
 	async (ctx, next) => {
 		const data = ctx.request.body as StoredData;
 		dbAdd(data);
+		const result = processSensorData(data);
 		ctx.status = 200;
-		ctx.body = "ok";
+		ctx.body = {
+			result,
+		};
 		await next();
 	},
 	chaosAfterMonkey
