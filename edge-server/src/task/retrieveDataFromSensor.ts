@@ -8,12 +8,20 @@ export const retrieveDataFromSensor = () => {
 	const sensors: Worker[] = [];
 
 	for (let i = 0; i < sensorAmount; i++) {
-		const sensor = new Worker(__dirname + "/../sensor/sensorData.ts", {
-			workerData: {
-				sensorName: "Sensor " + i,
-				sensorId: i,
-			},
-		});
+		const sensor = new Worker(
+			__dirname +
+				`${
+					config.NODE_ENV === "prod"
+						? "/../sensor/sensorData.js"
+						: "/../sensor/sensorData.ts"
+				}`,
+			{
+				workerData: {
+					sensorName: "Sensor " + i,
+					sensorId: i,
+				},
+			}
+		);
 
 		sensor.on(
 			"message",

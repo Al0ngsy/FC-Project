@@ -1,5 +1,6 @@
 export const config = {
-	SERVER_URL: process.env.LB_IP || "http://localhost",
+	NODE_ENV: process.env.NODE_ENV || "dev",
+	SERVER_URL: process.env.SERVER_URL || "http://localhost",
 	SERVER_PORT: process.env.PORT || 5559,
 	SERVER_DATA_RECEIVER_ENDPOINT_API:
 		process.env.SERVER_DATA_RECEIVER_ENDPOINT_API || "/save/data",
