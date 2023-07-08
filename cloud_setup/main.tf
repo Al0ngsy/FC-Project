@@ -11,7 +11,7 @@ resource "google_compute_instance" "default" {
 
   boot_disk {
     initialize_params {
-      image = "projects/ubuntu-os-cloud/global/images/family/ubuntu-2004-lts"
+      image = "projects/cos-cloud/global/images/family/cos-stable"
     }
   }
 
@@ -22,32 +22,31 @@ resource "google_compute_instance" "default" {
       // Ephemeral IP
     }
   }
+#  metadata = {
+#    gce-container-declaration = <<EOF
+#spec:
+#  containers:
+#  - name: server
+#    image: zero85/fog_project:server
+#    ports:
+#    - containerPort: "5559"
+#      hostPort: 80
+#      protocol: TCP
+#EOF
+#    google-logging-enabled = "false"
+#  }
 
+ metadata_startup_script = <<SCRIPT
+ #! /bin/bash
+ docker run -d -p 80:5559 "zero85/fog_project:server"
+ SCRIPT
   service_account {
     scopes = ["userinfo-email", "compute-ro", "storage-ro"]
   }
+   tags = ["http-server"]
 }
 
-resource "google_compute_firewall" "http" {
-  name    = "default-allow-http"
-  network = "default"
-
-  allow {
-    protocol = "tcp"
-    ports    = ["80"]
-  }
-
-  source_ranges = ["0.0.0.0/0"]
-}
-
-resource "google_compute_firewall" "https" {
-  name    = "default-allow-https"
-  network = "default"
-
-  allow {
-    protocol = "tcp"
-    ports    = ["443"]
-  }
-
-  source_ranges = ["0.0.0.0/0"]
+output "ip_address" {
+  value = google_compute_instance.default.network_interface[0].access_config[0].nat_ip
+  description = "The external IP address of the VM instance."
 }
