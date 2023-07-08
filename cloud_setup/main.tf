@@ -1,13 +1,13 @@
 provider "google" {
   credentials = file("gcp_account.json")
-  project     = "<project_id>"
-  region      = "us-central1"
+  project     = "fc-projekt"
+  region      = "europe-west1"
 }
 
 resource "google_compute_instance" "default" {
-  name         = "<vm_name>"
-  machine_type = "<machine_type>"
-  zone         = "<zone>"
+  name         = "server-vm"
+  machine_type = "e2-small"
+  zone         = "europe-west1-b"
 
   boot_disk {
     initialize_params {
