@@ -43,3 +43,16 @@ docker run -d -p 5559 cserver -- or 'eserver' for edge-server
 
 docker run:
 -p or --publish: This option is used to publish container ports to the host. It allows you to map a port on the Docker host to a port in the container. The syntax is -p hostPort:containerPort. With this option, you can access the containerized service from your local machine using the specified port on the Docker host.
+
+
+## Example on GCP
+
+Download your gcp service account json [link](https://cloud.google.com/iam/docs/keys-create-delete?hl=de) and put it in a gcp_account.json named file next to the main.tf.
+
+```
+terraform init # just for the first time
+terraform apply
+```
+The server starts up automatically and the ip is outputted at the terminal.
+Insert server ip in the config.ts for the edge-server and build the edge-server.
+Start the edge-server and see the data flow
