@@ -53,10 +53,10 @@ Download your gcp service account json [link](https://cloud.google.com/iam/docs/
 terraform init # just for the first time
 terraform apply
 ```
-after that start your local edge container:
+The server starts up automatically and the ip is outputted at the terminal.
+After that start your local edge container:
 ```
 docker run -p 5559:5559 -e "SERVER_URL=http://<server-ip>" zero85/fog_project:edge
 ```
-The server starts up automatically and the ip is outputted at the terminal.
-Insert server ip in the config.ts for the edge-server and build the edge-server.
-Start the edge-server and see the data flow
+
+Insert server ip in the SERVER_URL environment variable for the edge-server and start the edge-server and see the data flowing.
